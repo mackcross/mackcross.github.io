@@ -24,12 +24,14 @@ library(tmaptools)
 library(gganimate)
 library(cowplot)
 library(gridExtra)
+library(shiny)
 ```
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Importing in geojoson file 
-my_map <- st_read("~/Documents/research/primate_map/project_materials/sci_comm/shapefiles/rural_variables.geojson", quiet=TRUE)
+my_map <- st_read("~/Documents/mackcross/sci_comm/shapefiles/rural_variables.geojson", quiet=TRUE)
+# personal: ~/Documents/research/primate_map/project_materials/sci_comm/shapefiles/rural_variables.geojson
 my_data <- data.frame(my_map)
 
 # Convert size variable to numeric and remove missing values
@@ -113,13 +115,18 @@ server <- function(input, output) {
                  col = "#034e7b",
                  alpha = .8, 
                  title.size ="Avg. ACT Math Score", 
+                 legend.size.show = TRUE, 
                  legend.size.is.portrait=TRUE,
                  sizes.legend.labels=c("<= 21.3","<= 21.7","<= 22.1","<= 23.1"), 
                  scale = 1.75) +
       tm_legend(outside = TRUE, 
                 outside.position = "left", 
                 bg.color = "transparent", 
-                frame = FALSE)
+                frame = FALSE) 
+      #tm_add_legend(sizes = c(10, 20, 30, 40), 
+                    #labels = c("<= 21.3","<= 21.7","<= 22.1","<= 23.1"), 
+                    #title = "Avg. ACT Math Score")
+    
   })
 }
 
