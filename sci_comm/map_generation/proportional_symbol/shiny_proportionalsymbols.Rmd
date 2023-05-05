@@ -1,9 +1,10 @@
 ---
 output: html_document
+runtime: shiny
 ---
 
-```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # VISUALIZING IOWA EDUCATION
@@ -277,123 +278,5 @@ shinyApp(ui = ui, server = server)
 ```
 
 # END
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
-# Determine quantiles 
-# quantile(my_map$cleaned_rural_mean_sci, na.rm = TRUE)
-
-# Set quantiles 
-# my_map$binned_science <- as.numeric(my_map$cleaned_rural_mean_sci)
-# my_map$binned_science <- cut(my_map$cleaned_rural_mean_sci,
-                             # breaks = c(19.01000, 20.13391, 20.64000, 21.16250, 22.63571),
-                             # labels = c(1, 2, 3, 4))
-# my_map$binned_science <- as.numeric(my_map$binned_science)
-
-
-# tm_shape(my_map) +
-#   tm_fill("cleaned_rural_CountySpendingPerStudent", style = "quantile", n = 5, palette = "Greys", title = "Avg. Spending per Student") +
-#  tm_bubbles(size = "binned_science",
-#             col = "#034e7b", 
-#             alpha = .8, 
-#             title.size ="Avg. ACT Science Score", 
-#             legend.size.is.portrait=TRUE,
-#             sizes.legend.labels=c("<= 20.1","<= 20.6","<= 21.2","<= 22.6"), 
-#             scale = 1.75) +
-  #tm_layout(frame = FALSE, bg.color = "black") +
-#  tm_legend(outside = TRUE, 
-#            outside.position = "left", 
-#            bg.color = "transparent", 
-#            frame = FALSE)
-
-###############################################################################
-
-# Determine quantiles 
-# quantile(my_map$cleaned_rural_mean_math, na.rm = TRUE)
-
-# Set quantiles 
-#my_map$binned_math <- as.numeric(my_map$cleaned_rural_mean_math)
-#my_map$binned_math <- cut(my_map$cleaned_rural_mean_math,
-#                             breaks = c(19.66250, 21.33818, 21.68000, 22.08706, 23.12000),
-#                             labels = c(1, 2, 3, 4))
-#my_map$binned_math <- as.numeric(my_map$binned_math)
-
-
-#tm_shape(my_map) +
-#  tm_fill("cleaned_rural_CountySpendingPerStudent", style = "quantile", n = 5, palette = "Greys", title = "Avg. Spending per Student") +
-#  tm_bubbles(size = "binned_math",
-#             col = "#034e7b",
-#             alpha = .8, 
-#             title.size ="Avg. ACT Math Score", 
-#             legend.size.is.portrait=TRUE,
-#             sizes.legend.labels=c("<= 21.3","<= 21.7","<= 22.1","<= 23.1"), 
-#             scale = 1.75) +
-#  tm_layout(frame = FALSE, bg.color = "grey") +
-#  tm_legend(outside = TRUE, 
-#            outside.position = "left", 
-#            bg.color = "transparent", 
-#            frame = FALSE)
-
-
-```
-
-
-
-```{r, echo=FALSE}
-# Determine quantiles 
-# quantile(my_map$cleaned_rural_CountyGraduateRate4yr, na.rm = TRUE)
-
-# Set quantiles 
-#my_map$binned_grad <- as.numeric(my_map$cleaned_rural_CountyGraduateRate4yr)
-#my_map$binned_grad <- cut(my_map$cleaned_rural_CountyGraduateRate4yr,
-#                             breaks = c(81.9000, 91.1050, 94.0700, 96.0425, 100.0000),
-#                             labels = c(1, 2, 3, 4))
-#my_map$binned_grad <- as.numeric(my_map$binned_grad)
-
-
-#tm_shape(my_map) +
-#  tm_fill("cleaned_rural_CountySpendingPerStudent", style = "quantile", n = 5, palette = "Greys", title = "Avg. Spending per Student") +
-#  tm_bubbles(size = "binned_grad",
-#             col = "#6a51a3", 
-#             n = 3, 
-#             alpha = .8, 
-#             title.size ="4yr Graduation Rate", 
-#             legend.size.is.portrait=TRUE,
-#             sizes.legend.labels=c("<= 91%","<= 94%","<= 96%","<= 100%"), 
-#             scale = 1.75) +
-  #tm_layout(frame = FALSE, bg.color = "black") +
-#  tm_legend(outside = TRUE, 
-#            outside.position = "right", 
-#            bg.color = "transparent", 
-#            frame = FALSE)
-
-# Determine quantiles 
-# quantile(my_map$cleaned_rural_CountyGraduateRate5yr, na.rm = TRUE)
-
-# Set quantiles 
-#my_map$binned_grad5 <- as.numeric(my_map$cleaned_rural_CountyGraduateRate5yr)
-#my_map$binned_grad5 <- cut(my_map$cleaned_rural_CountyGraduateRate5yr,
-#                             breaks = c(88.08000, 93.45750, 95.26600, 97.39333, 100.0000),
-#                             labels = c(1, 2, 3, 4))
-#my_map$binned_grad5 <- as.numeric(my_map$binned_grad5)
-
-
-#tm_shape(my_map) +
-#  tm_fill("cleaned_rural_CountySpendingPerStudent", style = "quantile", n = 5, palette = "Greys", title = "Avg. Spending per Student") +
-#  tm_bubbles(size = "binned_grad5",
-#             col = "#6a51a3", 
-#             n = 3, 
-#             alpha = .8, 
-#             title.size ="5yr Graduation Rate", 
-#             legend.size.is.portrait=TRUE,
-#             sizes.legend.labels=c("<= 93.5%","<= 95%","<= 97.5%","<= 100%"), 
-#             scale = 1.75) +
-  #tm_layout(frame = FALSE, bg.color = "black") +
-#  tm_legend(outside = TRUE, 
-#            outside.position = "right", 
-#            bg.color = "transparent", 
-#            frame = FALSE)
-
-```
-
 
 
