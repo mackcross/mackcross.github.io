@@ -144,12 +144,18 @@
 	att3 = 'food_accessibility_2015_TractSeniors', att3alias = '% Seniors 65+', att3format = '.0f',
 	att4 = 'food_accessibility_2015_PovertyRate', att4alias = 'Poverty Rate', att4format = '.0f';
 
-  // enter below all variables that should be normalized. If you would like to multiple the variables
+	// enter below all variables that should be recalculated. The order of attributes should match with
+	// the list of multiply and divide by values
+  var attributesToBeNormalized = [att1, att2, att3];
+	// If you would like to multiple the variables
 	// with a constant value enter them in multiplyBy array. If there is no need for multiplication,
 	// simply enter 1 for each value in multiplyBy.
-  var attributesToBeNormalized = [att1, att2, att3];
 	var multiplyBy = [100, 100, 100];
+	// Enter the attribute name that you want to normalize (divide by).
+	// If you want to only multiply an attribute but not divide by another attribute
+	// then simply put null as the attribute name in the same order of the attribute.
 	var divideBy = ['food_accessibility_2015_OHU2010', 'food_accessibility_2015_POP2010', 'food_accessibility_2015_POP2010'];
+
 	// if your variables are not raw counts and they are already normalized, comment out above, and
 	//uncomment below:
 	// var attributesToBeNormalized = [];
@@ -375,8 +381,11 @@
 				function recalculateAttribute(attribute, multiplyby, divideby) {
 					// Function to catch errors when normalizing an attribute
 					// console.log(p, n);
-					if (!+divideby) {
-						return null;
+					if(+multiplyby){
+						//if the attribute is multiplied by only (no divide by)
+						return (+multiplyby) * (+attribute);
+					}else{
+							return null;
 					} else {
 						return ((+multiplyby) * (+attribute)) / +divideby;
 					}
