@@ -12,7 +12,7 @@ meals_df$name <- tolower(meals_df$name)
 meals_df$name <- gsub(" ", "_", meals_df$name)
 
 # Subsetting edu so only density reamins 
-edu_df <- edu_df[, c("CountySpendingPerStudent", "name", "County", "mean_sci")]
+edu_df <- edu_df[, c("CountySpendingPerStudent", "name", "County", "mean_sci", "mean_math")]
 
 # Merging dataframes
 merged_df <- merge(meals_df, edu_df, by = "name")
