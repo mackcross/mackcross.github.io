@@ -717,14 +717,9 @@ h1.circle3 {font-size:17px;text-align: center;width: 180px;margin-left: 30px;tex
 }
 
 .imglist {
-filter: url(filters.svg#grayscale); /* Firefox 3.5+ */
-filter: gray; /* IE6-9 */
--webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
-transition: width 2s;
--moz-transition: width 2s; /* Firefox 4 */
--webkit-transition: width 2s; /* Safari and Chrome */
--o-transition: width 2s; /* Opera */
+  filter: sepia(0.7) contrast(.9) brightness(0.9) saturate(0.8);
 }
+
 
 .title {  
   font-size: 30px;
@@ -733,6 +728,14 @@ transition: width 2s;
   text-align:center;
   padding-top:20px;
 }
+
+.title2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
 
 .greencircle { background:#7d8852; width:100px;height:100px;
 -moz-border-radius: 100px;
