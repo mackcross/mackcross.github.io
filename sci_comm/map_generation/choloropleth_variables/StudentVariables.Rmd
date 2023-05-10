@@ -112,9 +112,9 @@ These maps are designed to be interactive.There are three total map "zones" that
 
 **1) Adjust Map Location:** Hover over the map and notice the tool bar in the top right corner. If you select the symbol of two arrows bisecting each other labeled as "Pan," you can move the map around. Select the symbol that has the squares around two bisected arrows, labeled "Autoscale," and the sizing of the map will be adjusted. Note that there is a sliding bar to the right of the map which you can move up and down. 
 
-**2. Explore Legend:** All maps use the quantile classification which breaks the data into four classes. Click once on one of the legend classes and all the counties within that class will disappear. Click twice and all the non-selected classes will disappear. 
+**2) Explore Legend:** All maps use the quantile classification which breaks the data into four classes. Click once on one of the legend classes and all the counties within that class will disappear. Click twice and all the non-selected classes will disappear. 
 
-**3. Toggle Between Maps:** Each map zone consists of at least two maps. At the top of each zone, there are multiple headings to the right of the "Maps" label. You can toggle between the different variables by clicking back and forth between these headings. 
+**3) Toggle Between Maps:** Each map zone consists of at least two maps. At the top of each zone, there are multiple headings to the right of the "Maps" label. You can toggle between the different variables by clicking back and forth between these headings. 
 
 
 ## Levels of Education 
@@ -139,7 +139,8 @@ server <- function(input, output) {
       geom_sf(data = my_map, aes(fill = HS_Quantile,
                                  text = paste("County: ", CountyName, "<br>",
                                              "% High School Degrees: ", 
-                                             round(cleaned_rural_High.school.graduate..includes.equivalency..., 2), "%"))) +
+                                             round(cleaned_rural_High.school.graduate..includes.equivalency..., 2), "%")),
+              color = "black") +
     scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
                       labels = c("17-34.5 %", "< 37.5%", "< 39.2%", "< 41.4%", "< 46.8%"), 
                       name = "% High School Degrees", 
@@ -153,7 +154,8 @@ server <- function(input, output) {
         geom_sf(data = my_map, aes(fill = BA_Quantile,
                                 text = paste("County: ", CountyName, "<br>",
                                              "% Bachelor's Degrees: ", 
-                                             round(cleaned_rural_Bachelor.s.degree.., 2), "%"))) +
+                                             round(cleaned_rural_Bachelor.s.degree.., 2), "%")),
+                color = "black") +
         scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
                           labels = c("7.4-11.2 %", "< 12.9%", "< 14%", "< 15.2%", "< 32.1%"),
                           name = "% Bachelor's Degrees", 
@@ -166,7 +168,8 @@ server <- function(input, output) {
         geom_sf(data = my_map, aes(fill = Grad_Quantile,
                                 text = paste("County: ", CountyName, "<br>",
                                              "% Graduate Degrees: ", 
-                                             round(cleaned_rural_Graduate.or.professional.degree.., 2), "%"))) +
+                                             round(cleaned_rural_Graduate.or.professional.degree.., 2), "%")),
+                color = "black") +
         scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
                           labels = c("2.7 %", "< 4.0%", "< 4.8%", "< 5.9%", "< 23.7%"),
                           name = "% Graduate Degrees", 
@@ -203,7 +206,8 @@ server <- function(input, output) {
       geom_sf(data = my_map, aes(fill = ForthYear,
                                  text = paste("County: ", CountyName, "<br>",
                                              "% 4th Year Graduates: ", 
-                                             round(cleaned_rural_CountyGraduateRate4yr, 2), "%"))) +
+                                             round(cleaned_rural_CountyGraduateRate4yr, 2), "%")), 
+              color = "black") +
     scale_fill_manual(values = c("#edf8fb", "#b2e2e2", "#66c2a4", "#238b45"), 
                       labels = c("81.9 - 91%", "< 94%", "< 96%", "<= 100%"), 
                       name = "% 4th Year Graduates", 
@@ -217,7 +221,8 @@ server <- function(input, output) {
         geom_sf(data = my_map, aes(fill = FifthYear,
                                 text = paste("County: ", CountyName, "<br>",
                                              "% 5th Year Graduates: ", 
-                                             round(cleaned_rural_CountyGraduateRate5yr, 2), "%"))) +
+                                             round(cleaned_rural_CountyGraduateRate5yr, 2), "%")),
+                color = "black") +
         scale_fill_manual(values = c("#edf8fb", "#b2e2e2", "#66c2a4", "#238b45"), 
                           labels = c("88 - 91%", "< 93.46%", "< 95.3%", "<= 100%"),
                           name = "% 5th Year Graduates", 
@@ -254,7 +259,8 @@ server <- function(input, output) {
       geom_sf(data = my_map, aes(fill = ACT_Sci,
                                  text = paste("County: ", CountyName, "<br>",
                                              "Avg. ACT Sci Score: ", 
-                                             round(cleaned_rural_mean_sci, 2), "%"))) +
+                                             round(cleaned_rural_mean_sci, 2), "%")),
+              color = "black") +
     scale_fill_manual(values = c("#f6eff7", "#bdc9e1", "#67a9cf", "#02818a"), 
                       labels = c("17-34.5 %", "< 37.5%", "< 39.2%", "< 41.4%", "< 46.8%"), 
                       name = "Avg. ACT Science Score", 
@@ -268,7 +274,8 @@ server <- function(input, output) {
         geom_sf(data = my_map, aes(fill = ACT_Math,
                                 text = paste("County: ", CountyName, "<br>",
                                              "Avg. ACT Math Score: ", 
-                                             round(cleaned_rural_mean_math, 2), "%"))) +
+                                             round(cleaned_rural_mean_math, 2), "%")),
+                color = "black") +
         scale_fill_manual(values = c("#f6eff7", "#bdc9e1", "#67a9cf", "#02818a"), 
                           labels = c("7.4-11.2 %", "< 12.9%", "< 14%", "< 15.2%", "< 32.1%"),
                           name = "Avg. ACT Math Score", 
@@ -282,6 +289,7 @@ shinyApp(ui = ui, server = server)
 ```
 
 
-
+# THANK YOU
+If you are interested in further exploring Iowa education, please view my bivariate maps looking at the influence of poverty and county spending per student on ACT scores: https://observablehq.com/d/07f3cbbe81e2cc29. This link and further information on Iowa education as well as my personal science outreach work can also be found on my personal webpage: https://mackcross.github.io/mackcross/outreach.html. 
 
 
