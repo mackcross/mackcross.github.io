@@ -25,7 +25,7 @@ h1.circle3 {font-size:17px;text-align: center;width: 180px;margin-left: 30px;tex
 .leftmenu {width:350px;margin-right: 200px;}
 
 .titleline {height:20px;}
-.titlelinesimple {border-top: 1px solid #CCC; border-bottom: 2px solid #fff;margin-bottom:20px;}
+.titlelinesimple {border-top: 1px solid #CCC; border-bottom: 2px solid #fff;margin-bottom:30px;}
 .highlight {background: #7b9263; color: #fff; padding: 1px 3px 2px 3px; display:inline;}
 .dash {border-bottom:1px dashed;}
 .action {background: #eee; color: #555; display: inline; padding: 2px 10px;}

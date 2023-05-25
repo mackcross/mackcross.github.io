@@ -1784,7 +1784,7 @@ a.menu:after, .dropdown-toggle:after {
   font-size: 27px;
   font-weight: 200;
   line-height: 35px;
-  text-align: center;
+  text-align: left;
 }
 .menutitle {display:none;color:#7c9464;margin-bottom:10px;font-weight:bold;}
 footer {
