@@ -1,2 +1,0 @@
-# WELCOME
-I'm a computational anthropologist working towards my PhD in Biological Anthropology at University of Iowa. I research primate macroevoluationary trends, particulary in regards to those relating to diet, energetics, and nervous system evolution. Check out my personal website to learn more about me: https://mackcross.github.io/mackcross/. My individual projects are detailed in their respective repositories. Thank you for coming by! 
