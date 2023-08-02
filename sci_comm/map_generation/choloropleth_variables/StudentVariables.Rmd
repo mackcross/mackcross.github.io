@@ -1,0 +1,295 @@
+---
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+rm(list=ls())
+library(readr)
+library(choroplethr)
+library(choroplethrMaps)
+library(dplyr)
+library(ggplot2) 
+library(plotly)
+library(tmap)
+library(sf)
+library(tmaptools)
+library(gganimate)
+library(cowplot)
+library(gridExtra)
+library(shiny)
+library(ggiraph)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+# Importing in geojoson file 
+my_map <- st_read("rural_variables.geojson", quiet=TRUE)
+# lab: ~/Documents/mackcross/sci_comm/shapefiles/rural_variables.geojson
+# personal: ~/Documents/research/mackcross/sci_comm/shapefiles/rural_variables.geojson
+
+# Convert size variable to numeric and remove missing values
+my_map$cleaned_rural_density <- as.numeric(my_map$cleaned_rural_density)
+my_map$cleaned_rural_mean_sci <- as.numeric(my_map$cleaned_rural_mean_sci)
+my_map$cleaned_rural_mean_math <- as.numeric(my_map$cleaned_rural_mean_math)
+my_map$cleaned_rural_CountyGraduateRate4yr <- as.numeric(my_map$cleaned_rural_CountyGraduateRate4yr)
+my_map$cleaned_rural_CountyGraduateRate5yr <- as.numeric(my_map$cleaned_rural_CountyGraduateRate5yr)
+my_map$cleaned_rural_CountySpendingPerStudent <- as.numeric(my_map$cleaned_rural_CountySpendingPerStudent)
+my_map$cleaned_rural_Graduate.or.professional.degree.. <- as.numeric(my_map$cleaned_rural_Graduate.or.professional.degree..)
+my_map$cleaned_rural_Bachelor.s.degree.. <- as.numeric(my_map$cleaned_rural_Bachelor.s.degree..)
+my_map$cleaned_rural_High.school.graduate..includes.equivalency... <- as.numeric(my_map$cleaned_rural_High.school.graduate..includes.equivalency...)
+
+quantile(my_map$cleaned_rural_Graduate.or.professional.degree..)
+
+my_map$HS_Quantile <- cut(my_map$cleaned_rural_High.school.graduate..includes.equivalency..., 
+                     breaks = c(17.00, 35.05, 38.00, 41.05, 46.80), 
+                     include.lowest = TRUE)
+
+my_map$BA_Quantile <- cut(my_map$cleaned_rural_Bachelor.s.degree.., 
+                     breaks = c(7.40, 11.75, 13.50, 14.90, 32.10), 
+                     include.lowest = TRUE)
+
+my_map$Grad_Quantile <- cut(my_map$cleaned_rural_Graduate.or.professional.degree.., 
+                     breaks = c(2.7, 4.0, 4.8, 5.9, 23.7), 
+                     include.lowest = TRUE)
+
+
+my_map$CountySpending <- cut(my_map$cleaned_rural_CountySpendingPerStudent,
+                             breaks = c(12655.18, 15584.22, 16883.50, 18780.58, 33410.00), 
+                             include.lowest = TRUE)
+
+my_map$ACT_Sci <- cut(my_map$cleaned_rural_mean_sci,
+                             breaks = c(19.01000, 20.13391, 20.64000, 21.16250, 22.63571),
+                             include.lowest = TRUE)
+
+my_map$ACT_Math <- cut(my_map$cleaned_rural_mean_math,
+                          breaks = c(19.66250, 21.33818, 21.68000, 22.08706, 23.12000),
+                          include.lowest = TRUE)
+
+my_map$ForthYear <- cut(my_map$cleaned_rural_CountyGraduateRate4yr,
+                          breaks = c(81.9000, 91.1050, 94.0700, 96.0425, 100.0000),
+                          include.lowest = TRUE)
+
+my_map$FifthYear <- cut(my_map$cleaned_rural_CountyGraduateRate5yr,
+                           breaks = c(88.08000, 93.45750, 95.26600, 97.39333, 100.0000),
+                           include.lowest = TRUE)
+
+
+# Palettes of interest 
+# palette = c("#a6bddb", "#3690c0", "#034e7b"), 
+# palette = c("#8c510a", "#d8b365", "#7fbf7b")
+# palette = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d")
+# c("#f6eff7", "#bdc9e1", "#67a9cf", "#02818a")
+# c("#f1eef6", "#bdc9e1", "#74a9cf", "#0570b0")
+# c("#edf8fb", "#b2e2e2", "#66c2a4", "#238b45")
+# palette = c("#7b3294", "#c2a5cf", "#f7f7f7", "#a6dba0", "#008837")
+ palette = c("#edf8fb", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c")
+# palette = c("#f6eff7", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59")
+# palette = c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571")
+# palette = c("#edf8fb", "#b2e2e2", "#66c2a4", "#2ca25f", "#006d2c")
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#      theme(legend.key.size = unit(2, "cm"), 
+#            legend.text = element_text(size = 12), 
+#            legend.title = element_text(size = 14, face = "bold")) +
+
+
+```
+
+
+# VISUALIZING IOWA EDUCATION
+**ABOUT THE MAPS:** 
+There is not one way to demonstrate academic success. Typical measures used to evaluate the quality of education include the level of education among the general population, ACT scores and high school graduate rates. The following choropleth maps depict the average of each of these variables across counties. 
+
+**USING THE MAPS** 
+These maps are designed to be interactive.There are three total map "zones" that contain multiple maps of related variables. You can interact with these map "zones" in the following ways: 
+
+**1) Adjust Map Location:** Hover over the map and notice the tool bar in the top right corner. If you select the symbol of two arrows bisecting each other labeled as "Pan," you can move the map around. Select the symbol that has the squares around two bisected arrows, labeled "Autoscale," and the sizing of the map will be adjusted. Note that there is a sliding bar to the right of the map which you can move up and down. 
+
+**2) Explore Legend:** All maps use the quantile classification which breaks the data into four classes. Click once on one of the legend classes and all the counties within that class will disappear. Click twice and all the non-selected classes will disappear. 
+
+**3) Toggle Between Maps:** Each map zone consists of at least two maps. At the top of each zone, there are multiple headings to the right of the "Maps" label. You can toggle between the different variables by clicking back and forth between these headings. 
+
+
+## Levels of Education 
+How does the level of education in the general public vary across counties? These three maps depict the percentage of people whose highest degree is a high school degree, a bachelor's degree and a graduate degree. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ui <- fluidPage(
+  navbarPage(
+    "Maps",
+    tabPanel("High School Degrees", 
+             plotlyOutput("hs_map")),
+    tabPanel("Bachelor's Degrees",
+             plotlyOutput("ba_map")), 
+    tabPanel("Graduate Degrees", 
+             plotlyOutput("grad_map"))
+  )
+)
+
+server <- function(input, output) {
+  output$hs_map <- renderPlotly({
+    ggplot() +
+      geom_sf(data = my_map, aes(fill = HS_Quantile,
+                                 text = paste("County: ", CountyName, "<br>",
+                                             "% High School Degrees: ", 
+                                             round(cleaned_rural_High.school.graduate..includes.equivalency..., 2), "%")),
+              color = "black") +
+    scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
+                      labels = c("17-34.5 %", "< 37.5%", "< 39.2%", "< 41.4%", "< 46.8%"), 
+                      name = "% High School Degrees", 
+                      na.value = "black") +
+    theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white")) 
+})
+
+
+  output$ba_map <- renderPlotly({
+    ggplot()  +
+        geom_sf(data = my_map, aes(fill = BA_Quantile,
+                                text = paste("County: ", CountyName, "<br>",
+                                             "% Bachelor's Degrees: ", 
+                                             round(cleaned_rural_Bachelor.s.degree.., 2), "%")),
+                color = "black") +
+        scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
+                          labels = c("7.4-11.2 %", "< 12.9%", "< 14%", "< 15.2%", "< 32.1%"),
+                          name = "% Bachelor's Degrees", 
+                          na.value = "black") +
+        theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white"))  
+})
+
+      output$grad_map <- renderPlotly({
+    ggplot()  +
+        geom_sf(data = my_map, aes(fill = Grad_Quantile,
+                                text = paste("County: ", CountyName, "<br>",
+                                             "% Graduate Degrees: ", 
+                                             round(cleaned_rural_Graduate.or.professional.degree.., 2), "%")),
+                color = "black") +
+        scale_fill_manual(values = c("#edf8fb", "#b3cde3", "#8c96c6", "#88419d"), 
+                          labels = c("2.7 %", "< 4.0%", "< 4.8%", "< 5.9%", "< 23.7%"),
+                          name = "% Graduate Degrees", 
+                          na.value = "black") +
+        theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white")) 
+})
+  
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+
+## Graduation Rate 
+The below two maps provide the percentage of students who graduate from high school in four years compared against the percentage of students who graduate from high school in five years. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ui <- fluidPage(
+  navbarPage(
+    "Maps",
+    tabPanel("% 4th Year Graduates", 
+             plotlyOutput("ForthYear_map")),
+    tabPanel("% 5th Year Graduates",
+             plotlyOutput("FifthYear_map")) 
+
+  )
+)
+
+server <- function(input, output) {
+  output$ForthYear_map <- renderPlotly({
+    ggplot() +
+      geom_sf(data = my_map, aes(fill = ForthYear,
+                                 text = paste("County: ", CountyName, "<br>",
+                                             "% 4th Year Graduates: ", 
+                                             round(cleaned_rural_CountyGraduateRate4yr, 2), "%")), 
+              color = "black") +
+    scale_fill_manual(values = c("#edf8fb", "#b2e2e2", "#66c2a4", "#238b45"), 
+                      labels = c("81.9 - 91%", "< 94%", "< 96%", "<= 100%"), 
+                      name = "% 4th Year Graduates", 
+                      na.value = "black") +
+    theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white")) 
+})
+
+
+  output$FifthYear_map <- renderPlotly({
+    ggplot()  +
+        geom_sf(data = my_map, aes(fill = FifthYear,
+                                text = paste("County: ", CountyName, "<br>",
+                                             "% 5th Year Graduates: ", 
+                                             round(cleaned_rural_CountyGraduateRate5yr, 2), "%")),
+                color = "black") +
+        scale_fill_manual(values = c("#edf8fb", "#b2e2e2", "#66c2a4", "#238b45"), 
+                          labels = c("88 - 91%", "< 93.46%", "< 95.3%", "<= 100%"),
+                          name = "% 5th Year Graduates", 
+                          na.value = "black") +
+        theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white"))  
+})
+  
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+
+
+## ACT Math & Science Score Averages 
+The below two maps provide the average ACT Math and Science scores of high school students for each county.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ui <- fluidPage(
+  navbarPage(
+    "Maps",
+    tabPanel("ACT Science Scores", 
+             plotlyOutput("ACT_Sci_map")),
+    tabPanel("ACT Math Scores",
+             plotlyOutput("ACT_Math_map")) 
+
+  )
+)
+
+server <- function(input, output) {
+  output$ACT_Sci_map <- renderPlotly({
+    ggplot() +
+      geom_sf(data = my_map, aes(fill = ACT_Sci,
+                                 text = paste("County: ", CountyName, "<br>",
+                                             "Avg. ACT Sci Score: ", 
+                                             round(cleaned_rural_mean_sci, 2), "%")),
+              color = "black") +
+    scale_fill_manual(values = c("#f6eff7", "#bdc9e1", "#67a9cf", "#02818a"), 
+                      labels = c("17-34.5 %", "< 37.5%", "< 39.2%", "< 41.4%", "< 46.8%"), 
+                      name = "Avg. ACT Science Score", 
+                      na.value = "black") +
+    theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white")) 
+})
+
+
+  output$ACT_Math_map <- renderPlotly({
+    ggplot()  +
+        geom_sf(data = my_map, aes(fill = ACT_Math,
+                                text = paste("County: ", CountyName, "<br>",
+                                             "Avg. ACT Math Score: ", 
+                                             round(cleaned_rural_mean_math, 2), "%")),
+                color = "black") +
+        scale_fill_manual(values = c("#f6eff7", "#bdc9e1", "#67a9cf", "#02818a"), 
+                          labels = c("7.4-11.2 %", "< 12.9%", "< 14%", "< 15.2%", "< 32.1%"),
+                          name = "Avg. ACT Math Score", 
+                          na.value = "black") +
+        theme(axis.ticks = element_blank(), panel.grid = element_blank(), axis.text = element_blank(), panel.background = element_rect(fill = "white"))  
+})
+  
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+
+# THANK YOU
+If you are interested in further exploring Iowa education, please view my bivariate maps looking at the influence of poverty and county spending per student on ACT scores: https://observablehq.com/d/07f3cbbe81e2cc29. This link and further information on Iowa education as well as my personal science outreach work can also be found on my personal webpage: https://mackcross.github.io/mackcross/outreach.html. 
+
+
