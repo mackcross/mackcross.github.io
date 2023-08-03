@@ -774,6 +774,7 @@ section .container {
   color: #6baed6;
 }
 
+
 .services .icon-box:hover .icon::before {
   background: #08306b;
 }
@@ -1064,6 +1065,11 @@ section .container {
 .contact .info-box .social-links a:hover {
   color: #6baed6;
 }
+
+.contact .info-box .social-links a:hover .github-icon path {
+  stroke: #6baed6;
+}
+
 
 .contact .php-email-form {
   padding: 30px;
